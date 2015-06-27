@@ -1,5 +1,28 @@
-extends layout
+doctype html
+html
 
-block content
-  h1= title
-  p Welcome to #{title}
+  head
+      title Chat
+      link(rel='stylesheet', href='/stylesheets/style.css')      
+      script(src='https://code.jquery.com/jquery-1.11.3.min.js')
+      script(src="/socket.io/socket.io.js")
+      script.
+        var socket = io();
+      script(src="script.js")
+
+  body
+        ul#messages
+        form(action="")
+              input(type='text', autocomplete="off")#messageInput
+              button Send
+    script.
+        $('form').submit(function(){
+            socket.emit('chat message', $('#messageInput').val());
+            //console.log('chat: '+ $('#messageInput').val());
+            //window.alert('chat: '+ $('#messageInput').val());
+            $('#messageInput').val('');
+            return false;
+            });
+        socket.on('chat message', function(msg){
+            $('#messages').append($('<li>').text(msg));
+        });
