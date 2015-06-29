@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('meeter:server');
 var http = require('http');
+var attendee = require('../attendee');
 
 /**
  * Get port from environment and store in Express.
@@ -25,11 +26,20 @@ var io = require('socket.io')(server);
 
 //log IO connections
 io.on('connection', function(socket){
-  //console.log('a user connected');
+  console.log('a user connected');
+  attendee.add(socket.id);
+  console.log('Clients: '+ attendee.getCount());
+
   socket.on('chat message', function(msg){
     var msgClient = msg;
-    console.log('message ('+socket.id+'): ' + msg);
-    io.emit('chat message', msg);
+    console.log('message ('+socket.id+'): ' + msgClient);
+    io.emit('chat message', msgClient);
+  });
+
+  socket.on('disconnect', function() {
+    console.log('Disconnect');
+    attendee.remove(socket.id);
+    console.log('Clients: '+ attendee.getCount());
   });
 });
 

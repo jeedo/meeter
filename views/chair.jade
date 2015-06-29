@@ -10,6 +10,15 @@ html
       //script(src="script.js")
 
   body
+        table.table
+          tr.t-head
+            th ID
+            th Value
+          each val in attendees
+            tr.t-body
+              td= index
+              td= val
+
         ul#messages
         form(action="")
               input(type='text', autocomplete="off")#messageInput
